@@ -1,0 +1,86 @@
+! Title: uBlock-Origin-dev-filter – HTML DuckDuckGo – seo_spam
+! Expires: 1 day
+! Description: Filters to block and remove copycat-websites from search engines. Specific to dev websites like StackOverflow or GitHub.
+! Homepage: https://github.com/quenhus/uBlock-Origin-dev-filter
+! Licence: https://github.com/quenhus/uBlock-Origin-dev-filter/blob/main/LICENSE
+!
+! GitHub issues: https://github.com/quenhus/uBlock-Origin-dev-filter/issues
+! GitHub pull requests: https://github.com/quenhus/uBlock-Origin-dev-filter/pulls
+||spiegato.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="spiegato.com"])
+||actingcollegeses.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="actingcollegeses.com"])
+||patrickkidd3.typepad.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="patrickkidd3.typepad.com"])
+||durrell2012.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="durrell2012.com"])
+||developpaper.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="developpaper.com"])
+||topcode.in^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="topcode.in"])
+||javascripttutorial.net^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="javascripttutorial.net"])
+||geekwall.in^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="geekwall.in"])
+||mailinglistapi.info^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="mailinglistapi.info"])
+||worldgrowthtoday.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="worldgrowthtoday.com"])
+||emailconverts.info^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="emailconverts.info"])
+||email-pro.info^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="email-pro.info"])
+||icode9.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="icode9.com"])
+||900913.ru^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="900913.ru"])
+||iditect.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="iditect.com"])
+||jqueryscript.net^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="jqueryscript.net"])
+||osqa.net^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="osqa.net"])
+||codingwithfun.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="codingwithfun.com"])
+||codesprogram.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="codesprogram.com"])
+||iqcode.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="iqcode.com"])
+||hum-berlin.de^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="hum-berlin.de"])
+||britguidenewyork.net^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="britguidenewyork.net"])
+||justshowcode.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="justshowcode.com"])
+||itw01.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="itw01.com"])
+||codertw.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="codertw.com"])
+||multi-let.co.uk^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="multi-let.co.uk"])
+||answerforyou.net^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="answerforyou.net"])
+||globalizethis.org^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="globalizethis.org"])
+||unbate.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="unbate.com"])
+||ngontinh24.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="ngontinh24.com"])
+||nmstep.org^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="nmstep.org"])
+||juicycleanses.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="juicycleanses.com"])
+||code-discuss.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="code-discuss.com"])
+||bong-faq.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="bong-faq.com"])
+||suptitles.de^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="suptitles.de"])
+||brianlovin.com/hn$all
+html.duckduckgo.com##.result:has(a.result__url[href*="brianlovin.com/hn"])
+||plageroyale.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="plageroyale.com"])
+||thesassway.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="thesassway.com"])
+||azazworld.com^$all
+html.duckduckgo.com##.result:has(a.result__url[href*="azazworld.com"])

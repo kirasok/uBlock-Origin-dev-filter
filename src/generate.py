@@ -1,7 +1,6 @@
-from pathlib import Path
 from contextlib import ExitStack
 from functools import lru_cache
-
+from pathlib import Path
 
 LINE_SEP = "\n"
 COMMA_SEP = ","
@@ -13,8 +12,11 @@ OTHER_FORMAT_DATA_PATH = DEST_DATA_PATH.joinpath("./other_format/")
 
 def left_replace(input_str, old, new, count=1):
     return new.join(input_str.split(old, count))
+
+
 def right_replace(input_str, old, new, count=1):
     return new.join(input_str.rsplit(old, count))
+
 
 @lru_cache(128)
 def regex_to_domain(url):
@@ -23,12 +25,14 @@ def regex_to_domain(url):
     url = right_replace(url, "/*", "", 1)
     return url
 
+
 def to_domain_attr(url):
     return url \
         .replace("*://", "") \
         .replace("*.", ".") \
         .replace("/*", "") \
         .lstrip(".")
+
 
 def to_domain_ublock(url):
     formated_url = regex_to_domain(url)
@@ -38,31 +42,44 @@ def to_domain_ublock(url):
         # We can use this syntax which is more optimized
         return f"||{formated_url}^$all"
 
+
 def to_domain_ublacklist(url):
     formated_url = regex_to_domain(url)
     return f"*://*.{formated_url}/*"
+
 
 def to_domain_hosts_filter(url):
     formated_url = regex_to_domain(url)
     return f"0.0.0.0 {formated_url}"
 
+
 def to_google(url):
     return f'google.*###rso .MjjYud a[href*="{regex_to_domain(url)}"]:upward(.MjjYud)'
+
 
 def to_duckduckgo(url):
     return f'duckduckgo.com##.react-results--main > li:has(a[href*="{regex_to_domain(url)}"])'
 
+
+def to_htmlduckduckgo(url):
+    return f'html.duckduckgo.com##.result:has(a.result__url[href*="{regex_to_domain(url)}"])'
+
+
 def to_brave(url):
     return f'search.brave.com###results > div:has(a[href*="{regex_to_domain(url)}"])'
+
 
 def to_startpage(url):
     return f'startpage.com##.w-gl .result:has(a[href*="{regex_to_domain(url)}"])'
 
+
 def to_ecosia(url):
     return f'ecosia.org###main .result:has(a[href*="{regex_to_domain(url)}"])'
 
+
 def to_userscript(url):
     return f'[data-domain*="{to_domain_attr(url)}"]'
+
 
 def append_in_se(fd_by_filter, filter_name, source_is_for_dev, value):
     fd_by_filter[filter_name]["current"].write(value)
@@ -73,9 +90,11 @@ def append_in_se(fd_by_filter, filter_name, source_is_for_dev, value):
         # The dev filter was formerly called "all". Dont rename it for compatibility
         fd_by_filter[filter_name]["all"].write(value)
 
+
 UBLACKLIST_FILTER_TITLE = "uBlacklist"
 HOSTS_FILTER_TITLE = "DNS hosts blocklist"
 DOMAINS_FILTER_TITLE = "Domains blocklist"
+
 
 def get_userscript_start(name):
     return f"""// ==UserScript==
@@ -87,6 +106,7 @@ def get_userscript_start(name):
 (function() {{
     const css = `
 """
+
 
 def get_userscript_end():
     return """#__non-existent__{display: none}`;
@@ -118,6 +138,7 @@ def get_userscript_end():
     }
 })();"""
 
+
 def get_ublock_filters_header(name):
     return f"""! Title: uBlock-Origin-dev-filter – {name}
 ! Expires: 1 day
@@ -129,6 +150,7 @@ def get_ublock_filters_header(name):
 ! GitHub pull requests: https://github.com/quenhus/uBlock-Origin-dev-filter/pulls
 """
 
+
 def get_common_filters_header(name):
     return f"""# Title: uBlock-Origin-dev-filter – {name}
 # Expires: 1 day
@@ -139,6 +161,7 @@ def get_common_filters_header(name):
 # GitHub issues: https://github.com/quenhus/uBlock-Origin-dev-filter/issues
 # GitHub pull requests: https://github.com/quenhus/uBlock-Origin-dev-filter/pulls
 """
+
 
 dev_sources_list = (
     "github",
@@ -155,9 +178,15 @@ ubo_search_engines = {
         "name": "DuckDuckGo",
         "formater": lambda url: to_duckduckgo(url) + LINE_SEP
     },
+    "html_duckduckgo": {
+        "name": "HTML DuckDuckGo",
+        "formater": lambda url: to_htmlduckduckgo(url) + LINE_SEP
+    },
     "google_duckduckgo": {
-        "name": "Google+DuckDuckGo",
-        "formater": lambda url: to_google(url) + LINE_SEP + to_duckduckgo(url) + LINE_SEP
+        "name":
+        "Google+DuckDuckGo",
+        "formater":
+        lambda url: to_google(url) + LINE_SEP + to_duckduckgo(url) + LINE_SEP
     },
     "brave": {
         "name": "Brave",
@@ -172,10 +201,15 @@ ubo_search_engines = {
         "formater": lambda url: to_ecosia(url) + LINE_SEP
     },
     "all_search_engines": {
-        "name": "All Search Engines",
-        "formater": lambda url: to_google(url) + LINE_SEP + to_duckduckgo(url) + LINE_SEP + to_brave(url) + LINE_SEP + to_startpage(url) + LINE_SEP + to_ecosia(url) + LINE_SEP
+        "name":
+        "All Search Engines",
+        "formater":
+        lambda url: to_google(url) + LINE_SEP + to_duckduckgo(
+            url) + LINE_SEP + to_htmlduckduckgo(url) + LINE_SEP + to_brave(url)
+        + LINE_SEP + to_startpage(url) + LINE_SEP + to_ecosia(url) + LINE_SEP
     }
 }
+
 
 def main():
     root_path = Path(__file__).parent.joinpath("../")
@@ -197,9 +231,12 @@ def main():
 
     # For Userscript filters
     path_by_filter["userscript_gd"] = {
-        "dist": dist_path.joinpath("userscript", "google_duckduckgo"),
-        "global": dist_path.joinpath("userscript", "google_duckduckgo", "global.txt"),
-        "all": dist_path.joinpath("userscript", "google_duckduckgo", "all.txt"),
+        "dist":
+        dist_path.joinpath("userscript", "google_duckduckgo"),
+        "global":
+        dist_path.joinpath("userscript", "google_duckduckgo", "global.txt"),
+        "all":
+        dist_path.joinpath("userscript", "google_duckduckgo", "all.txt"),
     }
 
     # For uBlacklist filters
@@ -231,8 +268,12 @@ def main():
         # Open all files (one "all.txt" and one "global.txt" for each search engine)
         fd_by_filter = {
             se: {
-                "global": global_stack.enter_context(se_files["global"].open("w", encoding="utf8")),
-                "all": global_stack.enter_context(se_files["all"].open("w", encoding="utf8")),
+                "global":
+                global_stack.enter_context(se_files["global"].open(
+                    "w", encoding="utf8")),
+                "all":
+                global_stack.enter_context(se_files["all"].open(
+                    "w", encoding="utf8")),
             }
             for se, se_files in path_by_filter.items()
         }
@@ -240,23 +281,34 @@ def main():
         # Add header in each general uBlock filter
         for filter_name, filter_meta in ubo_search_engines.items():
             se_name = filter_meta['name']
-            fd_by_filter[filter_name]["global"].write(get_ublock_filters_header(f"{se_name} – Global"))
+            fd_by_filter[filter_name]["global"].write(
+                get_ublock_filters_header(f"{se_name} – Global"))
             # The dev filter was formerly called "all". Dont rename it for compatibility
-            fd_by_filter[filter_name]["all"].write(get_ublock_filters_header(f"{se_name} – Dev"))
+            fd_by_filter[filter_name]["all"].write(
+                get_ublock_filters_header(f"{se_name} – Dev"))
 
         # Add header in each userscript filter
-        fd_by_filter["userscript_gd"]["global"].write(get_userscript_start("Google+DuckDuckGo - Global"))
-        fd_by_filter["userscript_gd"]["all"].write(get_userscript_start("Google+DuckDuckGo - Dev"))
+        fd_by_filter["userscript_gd"]["global"].write(
+            get_userscript_start("Google+DuckDuckGo - Global"))
+        fd_by_filter["userscript_gd"]["all"].write(
+            get_userscript_start("Google+DuckDuckGo - Dev"))
 
         # Add header in each other filters
-        fd_by_filter["uBlacklist"]["global"].write(get_common_filters_header(f"{UBLACKLIST_FILTER_TITLE} - Global"))
-        fd_by_filter["uBlacklist"]["all"].write(get_common_filters_header(f"{UBLACKLIST_FILTER_TITLE} - Dev"))
-        fd_by_filter["hosts"]["global"].write(get_common_filters_header(f"{HOSTS_FILTER_TITLE} - Global"))
-        fd_by_filter["hosts"]["all"].write(get_common_filters_header(f"{HOSTS_FILTER_TITLE} - Dev"))
-        fd_by_filter["domains"]["global"].write(get_common_filters_header(f"{DOMAINS_FILTER_TITLE} - Global"))
-        fd_by_filter["domains"]["all"].write(get_common_filters_header(f"{DOMAINS_FILTER_TITLE} - Dev"))
+        fd_by_filter["uBlacklist"]["global"].write(
+            get_common_filters_header(f"{UBLACKLIST_FILTER_TITLE} - Global"))
+        fd_by_filter["uBlacklist"]["all"].write(
+            get_common_filters_header(f"{UBLACKLIST_FILTER_TITLE} - Dev"))
+        fd_by_filter["hosts"]["global"].write(
+            get_common_filters_header(f"{HOSTS_FILTER_TITLE} - Global"))
+        fd_by_filter["hosts"]["all"].write(
+            get_common_filters_header(f"{HOSTS_FILTER_TITLE} - Dev"))
+        fd_by_filter["domains"]["global"].write(
+            get_common_filters_header(f"{DOMAINS_FILTER_TITLE} - Global"))
+        fd_by_filter["domains"]["all"].write(
+            get_common_filters_header(f"{DOMAINS_FILTER_TITLE} - Dev"))
 
-        for source_f in sorted(root_path.joinpath(SOURCE_DATA_PATH).glob("*.txt")):
+        for source_f in sorted(
+                root_path.joinpath(SOURCE_DATA_PATH).glob("*.txt")):
             source_stem = source_f.stem
 
             # Sort and find duplicates
@@ -280,7 +332,9 @@ def main():
                 for filter_name in fd_by_filter:
                     dist = path_by_filter[filter_name]["dist"]
                     f = dist.joinpath(f"{source_stem}.txt")
-                    fd_by_filter[filter_name]["current"] = source_stack.enter_context(f.open("w", encoding="utf8"))
+                    fd_by_filter[filter_name][
+                        "current"] = source_stack.enter_context(
+                            f.open("w", encoding="utf8"))
 
                 source_name = source_f.stem.replace("_copycats", "")
                 source_is_for_dev = source_name in dev_sources_list
@@ -288,15 +342,24 @@ def main():
                 # Add header in each source-specific uBlock filter
                 for filter_name, filter_meta in ubo_search_engines.items():
                     se_name = filter_meta['name']
-                    fd_by_filter[filter_name]["current"].write(get_ublock_filters_header(f"{se_name} – {source_name}"))
+                    fd_by_filter[filter_name]["current"].write(
+                        get_ublock_filters_header(
+                            f"{se_name} – {source_name}"))
 
                 # Add header in each userscript filter
-                fd_by_filter["userscript_gd"]["current"].write(get_userscript_start(f"Google+DuckDuckGo - {source_name}"))
+                fd_by_filter["userscript_gd"]["current"].write(
+                    get_userscript_start(f"Google+DuckDuckGo - {source_name}"))
 
                 # Add header in each other filters
-                fd_by_filter["uBlacklist"]["current"].write(get_common_filters_header(f"{UBLACKLIST_FILTER_TITLE} - {source_name}"))
-                fd_by_filter["hosts"]["current"].write(get_common_filters_header(f"{HOSTS_FILTER_TITLE} - {source_name}"))
-                fd_by_filter["domains"]["current"].write(get_common_filters_header(f"{DOMAINS_FILTER_TITLE} - {source_name}"))
+                fd_by_filter["uBlacklist"]["current"].write(
+                    get_common_filters_header(
+                        f"{UBLACKLIST_FILTER_TITLE} - {source_name}"))
+                fd_by_filter["hosts"]["current"].write(
+                    get_common_filters_header(
+                        f"{HOSTS_FILTER_TITLE} - {source_name}"))
+                fd_by_filter["domains"]["current"].write(
+                    get_common_filters_header(
+                        f"{DOMAINS_FILTER_TITLE} - {source_name}"))
 
                 for line in source_fd:
                     if line.startswith("!") or not line.strip():
@@ -305,22 +368,33 @@ def main():
 
                     # Block the domain
                     for filter_name, filter_meta in ubo_search_engines.items():
-                        append_in_se(fd_by_filter, filter_name, source_is_for_dev, to_domain_ublock(url) + LINE_SEP)
+                        append_in_se(fd_by_filter, filter_name,
+                                     source_is_for_dev,
+                                     to_domain_ublock(url) + LINE_SEP)
 
-                        append_in_se(fd_by_filter, filter_name, source_is_for_dev, filter_meta["formater"](url))
+                        append_in_se(fd_by_filter, filter_name,
+                                     source_is_for_dev,
+                                     filter_meta["formater"](url))
 
-                    append_in_se(fd_by_filter, "userscript_gd", source_is_for_dev, to_userscript(url) + COMMA_SEP + LINE_SEP)
-                    append_in_se(fd_by_filter, "uBlacklist", source_is_for_dev, to_domain_ublacklist(url) + LINE_SEP)
-                    append_in_se(fd_by_filter, "hosts", source_is_for_dev, to_domain_hosts_filter(url) + LINE_SEP)
-                    append_in_se(fd_by_filter, "domains", source_is_for_dev, regex_to_domain(url) + LINE_SEP)
-
+                    append_in_se(fd_by_filter, "userscript_gd",
+                                 source_is_for_dev,
+                                 to_userscript(url) + COMMA_SEP + LINE_SEP)
+                    append_in_se(fd_by_filter, "uBlacklist", source_is_for_dev,
+                                 to_domain_ublacklist(url) + LINE_SEP)
+                    append_in_se(fd_by_filter, "hosts", source_is_for_dev,
+                                 to_domain_hosts_filter(url) + LINE_SEP)
+                    append_in_se(fd_by_filter, "domains", source_is_for_dev,
+                                 regex_to_domain(url) + LINE_SEP)
 
                 # Add footer in each userscript filter
-                fd_by_filter["userscript_gd"]["current"].write(get_userscript_end())
+                fd_by_filter["userscript_gd"]["current"].write(
+                    get_userscript_end())
 
         # Add footer in each userscript filter
         for source_type in ("global", "all"):
-            fd_by_filter["userscript_gd"][source_type].write(get_userscript_end())
+            fd_by_filter["userscript_gd"][source_type].write(
+                get_userscript_end())
+
 
 if __name__ == "__main__":
     main()
